@@ -1,0 +1,41 @@
+<resources>
+
+    <style name="listViewItemButtonStyle">
+        <item name="android:layout_width">@dimen/lvItemHeight</item>
+        <item name="android:layout_height">@dimen/lvItemHeight</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    
+    <style name="listViewVerticalDivider">
+        <item name="android:layout_marginTop">@dimen/lvDividerMargin</item>
+        <item name="android:layout_marginBottom">@dimen/lvDividerMargin</item>
+        <item name="android:layout_width">@dimen/lvDividerWidth</item>
+        <item name="android:background">@color/lvDividerColor</item>
+    </style>
+    
+    <style name="listViewHeaderItem">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/lvHeadingTextSize</item>
+        <item name="android:paddingLeft">@dimen/lvHeadingPaddingLeft</item>
+    </style>
+    
+    
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+</resources>
