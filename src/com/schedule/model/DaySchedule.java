@@ -3,20 +3,22 @@ package com.schedule.model;
 
 import java.util.*;
 
+import org.xmlpull.v1.XmlSerializer;
+
 import android.util.Log;
 
 public class DaySchedule
 {
 
     private List<UniversityClass> classes;
-    private String nameOfDay;
-    
+    private String                nameOfDay;
+
     public DaySchedule( List<UniversityClass> classes, String nameOfDay )
     {
         this.classes = classes;
         this.nameOfDay = nameOfDay;
     }
-    
+
     public boolean addClass( UniversityClass universityClass )
     {
         if ( isScheduleContainClass( universityClass ) )
@@ -29,14 +31,14 @@ public class DaySchedule
             return true;
         }
     }
-    
+
     public boolean isScheduleContainClass( UniversityClass universityClass )
     {
-        for( UniversityClass currentClass : classes)
+        for( UniversityClass currentClass : classes )
         {
-            if(currentClass.getClassNumber() == universityClass.getClassNumber())
+            if ( currentClass.getClassNumber() == universityClass.getClassNumber() )
             {
-                if(currentClass.getWeekType() == universityClass.getWeekType())
+                if ( currentClass.getWeekType() == universityClass.getWeekType() )
                 {
                     return true;
                 }
@@ -44,6 +46,7 @@ public class DaySchedule
         }
         return false;
     }
+
     public boolean isClassesEmpty()
     {
         return classes.isEmpty();
@@ -53,11 +56,12 @@ public class DaySchedule
     {
         return classes.size();
     }
+
     public UniversityClass getClassByPosition( int position )
     {
         return classes.get( position );
     }
-    
+
     public void removeByPosition( int position )
     {
         try
@@ -69,25 +73,45 @@ public class DaySchedule
             Log.d( "Logs", exception.getMessage() );
         }
     }
-    
+
     public String getNameOfDay()
     {
         return this.nameOfDay;
     }
-    
+
     public void clearClasses()
     {
         classes.clear();
     }
-    
-    public void addAll(List<UniversityClass> collection)
+
+    public void addAll( List<UniversityClass> collection )
     {
         classes.addAll( collection );
     }
-    
+
     public List<UniversityClass> getClasses()
     {
         return classes;
     }
-    
+
+    public void getDayScheduleInXmlIntroduction( XmlSerializer serializer )
+    {
+        try
+        {
+            serializer.startTag( "", nameOfDay );
+
+            for( UniversityClass currentClass : classes )
+            {
+                serializer.startTag( "", XmlFileManager.CLASS );
+                currentClass.getUniversityClassInXmlIntroduction( serializer );
+                serializer.endTag( "", XmlFileManager.CLASS );
+            }
+            serializer.endTag( "", nameOfDay );
+        }
+        catch( Exception e )
+        {
+            throw new RuntimeException( e );
+        }
+    }
+
 }

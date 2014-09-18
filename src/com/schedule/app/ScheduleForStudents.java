@@ -19,12 +19,13 @@ import android.widget.Toast;
 public class ScheduleForStudents extends Activity
 {
 
-    public static final String[]      days = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
+    public static final String[]   DAYS        = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
 
     private GeneralSchedule            generalSchedule;
     static public ScheduleForStudents mainActivity;
 
-    private SeparatedListAdapter       adapter;
+    private SeparatedListAdapter      adapter;
+    private XmlFileManager             fileManager;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -35,16 +36,16 @@ public class ScheduleForStudents extends Activity
         mainActivity = this;
 
         generalSchedule = new GeneralSchedule();
-        for( String day : XmlParser.DAYS )
+        for( String day : DAYS )
         {
             generalSchedule.addDaySchedule( new DaySchedule( new ArrayList<UniversityClass>(), day ) );
         }
 
-        XmlParser parser = new XmlParser( generalSchedule );
+        fileManager = new XmlFileManager( generalSchedule );
 
         try
         {
-            parser.parseXML();
+            fileManager.parseXML();
         }
         catch( XmlPullParserException e )
         {
@@ -61,7 +62,7 @@ public class ScheduleForStudents extends Activity
 
         adapter = new SeparatedListAdapter( this );
 
-        for( String day : days )
+        for( String day : DAYS )
         {
             final DayScheduleAdapter dayAdapter = new DayScheduleAdapter( this,
                     generalSchedule.getDayScheduleByDayName( day ) );
@@ -93,7 +94,7 @@ public class ScheduleForStudents extends Activity
     {
         if ( resultCode != -1 )
         {
-            final String day = XmlParser.DAYS[resultCode];
+            final String day = DAYS[resultCode];
             UniversityClass newClass = (UniversityClass) data.getParcelableExtra( UniversityClass.class
                     .getCanonicalName() );
             DaySchedule daySchedule = generalSchedule.getDayScheduleByDayName( day );
@@ -103,6 +104,15 @@ public class ScheduleForStudents extends Activity
             }
             else
             {
+                //Add thread
+                try
+                {
+                    fileManager.saveScheduleToXmlFile();
+                }
+                catch( IOException exaption)
+                {
+                    exaption.printStackTrace();
+                }
                 // update the section with changing
                 adapter.update( day );
             }
