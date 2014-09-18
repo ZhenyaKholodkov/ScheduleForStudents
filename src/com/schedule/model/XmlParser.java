@@ -1,9 +1,7 @@
 package com.schedule.model;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -13,52 +11,44 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.os.Environment;
 
-public class XmlFileManager
+public class XmlParser
 {
-    public static final String SCHEDULE    = "schedule";
-    public static final String CLASS       = "class";
-    public static final String CLASSNUMBER = "class_number";
-    public static final String SUBJECT     = "subject";
-    public static final String TEACHER     = "teacher";
-    public static final String AUDITORY    = "auditory";
-    public static final String COMMENTS    = "comments";
-    public static final String CLASSTYPE   = "class_type";
-    public static final String WEEKTYPE    = "week_type";
 
-    private GeneralSchedule      generalSchedule;
+    public static final String[]   DAYS        = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
 
-    public static final String   FOLDERNAME  = Environment.getExternalStorageDirectory().getAbsolutePath()
-                                                     + "/ScheduleForStudents";
-    public static final String   FILENAME    = FOLDERNAME + "/schedule.xml";
+    private static final String    CLASS       = "class";
+    private static final String    CLASSNUMBER = "class_number";
+    private static final String    SUBJECT     = "subject";
+    private static final String    TEACHER     = "teacher";
+    private static final String    AUDITORY    = "auditory";
+    private static final String    COMMENTS    = "comments";
+    private static final String    CLASSTYPE   = "class_type";
+    private static final String    WEEKTYPE    = "week_type";
 
-    public XmlFileManager( GeneralSchedule generalSchedule )
+    private GeneralSchedule       generalSchedule;
+
+    public XmlParser( GeneralSchedule generalSchedule )
     {
         this.generalSchedule = generalSchedule;
     }
 
-
-	public void parseXML() throws XmlPullParserException, IOException
+    public void parseXML() throws XmlPullParserException, IOException
     {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware( true );
         XmlPullParser parser = factory.newPullParser();
 
         // get a reference to the file.
-        File file = new File( FILENAME );
-        if ( !file.exists() )
-        {
-            File folder = new File( FOLDERNAME );
-            folder.mkdirs();
-            file.createNewFile();
-        }
+        File file = new File( Environment.getExternalStorageDirectory() + "/ScheduleForStudents/schedule.xml" );
 
         // create an input stream to be read by the stream reader.
         FileInputStream fis = new FileInputStream( file );
 
         // set the input for the parser using an InputStreamReader
         parser.setInput( new InputStreamReader( fis ) );
-        
+
         int eventType = parser.getEventType();
+
         DaySchedule currenyDay = null;
         UniversityClass newClass = null;
         DaySchedule day;
@@ -123,16 +113,5 @@ public class XmlFileManager
             }
             eventType = parser.next();
         }
-    }
-    
-    public void saveScheduleToXmlFile() throws IOException
-    {
-        String xmlIntroduction = generalSchedule.getScheduleInXmlIntroduction();
-
-        BufferedWriter bWriter = new BufferedWriter( new FileWriter( new File( FILENAME ) ) );
-
-        bWriter.write( xmlIntroduction );
-
-        bWriter.close();
     }
 }

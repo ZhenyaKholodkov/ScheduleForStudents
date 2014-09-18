@@ -1,8 +1,6 @@
 
 package com.schedule.model;
 
-import org.xmlpull.v1.XmlSerializer;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -158,44 +156,6 @@ public class UniversityClass implements Parcelable
         }
         return "Undefine";
     }
-    
-    public void getUniversityClassInXmlIntroduction( XmlSerializer serializer )
-    {
-        try
-        {
-            serializer.startTag( "", XmlFileManager.CLASSNUMBER );
-            serializer.text( String.valueOf(  getClassNumber() ));
-            serializer.endTag( "", XmlFileManager.CLASSNUMBER );
-
-            serializer.startTag( "", XmlFileManager.SUBJECT );
-            serializer.text( getSubject() );
-            serializer.endTag( "", XmlFileManager.SUBJECT );
-
-            serializer.startTag( "", XmlFileManager.TEACHER );
-            serializer.text( getTeacher() );
-            serializer.endTag( "", XmlFileManager.TEACHER );
-
-            serializer.startTag( "", XmlFileManager.AUDITORY );
-            serializer.text( getAuditory() );
-            serializer.endTag( "", XmlFileManager.AUDITORY );
-
-            serializer.startTag( "", XmlFileManager.CLASSTYPE );
-            serializer.text( String.valueOf( getClassType() ) );
-            serializer.endTag( "", XmlFileManager.CLASSTYPE );
-
-            serializer.startTag( "", XmlFileManager.WEEKTYPE );
-            serializer.text( String.valueOf( getWeekType() ) );
-            serializer.endTag( "", XmlFileManager.WEEKTYPE );
-
-            serializer.startTag( "", XmlFileManager.COMMENTS );
-            serializer.text( getComments() );
-            serializer.endTag( "", XmlFileManager.COMMENTS );
-        }
-        catch( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
-    }
 
     @Override
     public int describeContents()
@@ -227,5 +187,4 @@ public class UniversityClass implements Parcelable
         parcel.writeInt( weekType );
 
     }
-
 }
