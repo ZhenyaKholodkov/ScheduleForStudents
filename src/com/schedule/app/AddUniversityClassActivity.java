@@ -2,7 +2,6 @@
 package com.schedule.app;
 
 import com.schedule.model.UniversityClass;
-import com.schedule.model.XmlParser;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -67,7 +66,7 @@ public class AddUniversityClassActivity extends Activity
     private int getNumberOfDay( String day )
     {
         int numberDay = 0;
-        for( String cDay : XmlParser.DAYS )
+        for( String cDay : ScheduleForStudents.DAYS )
         {
             if ( cDay.equals( day ) )
             {
