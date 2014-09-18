@@ -34,18 +34,18 @@ public class HeaderAdapter extends ArrayAdapter<String>
         {
             item = LayoutInflater.from( mcontext ).inflate( mresource, parent, false );
             ViewHolder holder = new ViewHolder();
-            holder.text = (TextView) item.findViewById( R.id.header_text );
-            holder.btn = item.findViewById( R.id.add_button );
+            holder.headerText = (TextView) item.findViewById( R.id.header_text );
+            holder.addButton = item.findViewById( R.id.add_button );
             item.setTag( holder );
         }
 
         ViewHolder holder = (ViewHolder) item.getTag();
-        holder.text.setText( new StringBuilder( headerText ) );
+        holder.headerText.setText( new StringBuilder( headerText ) );
 
-        holder.btn.setOnClickListener( new OnClickListener()
+        holder.addButton.setOnClickListener( new OnClickListener()
         {
             @Override
-            public void onClick( View v )
+            public void onClick( View view )
             {
                 ScheduleForStudents.mainActivity.openAddUniversityClass( headerText );
             }
@@ -56,8 +56,8 @@ public class HeaderAdapter extends ArrayAdapter<String>
 
     static class ViewHolder
     {
-        TextView text;
-        View     btn;
+        TextView headerText;
+        View     addButton;
     }
 
 }
