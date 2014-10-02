@@ -3,6 +3,7 @@ package com.schedule.adapters;
 
 import com.schedule.app.R;
 import com.schedule.model.DaySchedule;
+import com.schedule.model.UniversityClass;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,20 +19,17 @@ public class DayScheduleAdapter extends BaseAdapter
     private final Context    context;
     public final DaySchedule daySchedule;
     private OnClickListener  clickListener;
-    private int              count;
+    private boolean hasPair = false;
 
     public DayScheduleAdapter( Context context, DaySchedule daySchedule )
     {
         this.context = context;
         this.daySchedule = daySchedule;
-        this.count = daySchedule.getCountOfClasses();
     }
-
     @Override
     public int getCount()
     {
-        count = daySchedule.getCountOfClasses();
-        return count;
+        return daySchedule.getCountOfPairs();
     }
 
     public void SetOnCLickListener( OnClickListener listener )
@@ -52,81 +50,170 @@ public class DayScheduleAdapter extends BaseAdapter
         // TODO Auto-generated method stub
         return position;
     }
+    public boolean hasPair()
+    {
+        return hasPair;
+    }
 
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {
 
         View item = convertView;
-        ViewHolder holder;
 
-        if ( convertView == null )
-        {
+        UniversityClass numeratorClass = daySchedule.getNumeratorClassAt( position );
+        UniversityClass denominatorClass = daySchedule.getDenominatorClassAt( position );
 
-            item = LayoutInflater.from( context ).inflate( R.layout.list_item, parent, false );
-            holder = new ViewHolder();
+            ViewHolder holder = new ViewHolder();
+            if ( convertView == null )
+            {
+                item = LayoutInflater.from( context ).inflate( R.layout.list_item_different_week_type, parent, false );
 
-            holder.classNumber = (TextView) item.findViewById( R.id.item_class_number );
-            holder.classTime = (TextView) item.findViewById( R.id.item_class_time );
-            holder.subject = (TextView) item.findViewById( R.id.item_subject );
-            holder.classType = (TextView) item.findViewById( R.id.item_class_type );
-            holder.teacher = (TextView) item.findViewById( R.id.item_teacher );
-            holder.auditory = (TextView) item.findViewById( R.id.item_auditory );
-            holder.comments = (TextView) item.findViewById( R.id.item_comments );
+                holder.classNumber = (TextView) item.findViewById( R.id.item_class_number_week_type );
+                holder.classTime = (TextView) item.findViewById( R.id.item_class_time_week_type );
 
-            holder.button = (ImageButton) item.findViewById( R.id.button );
+                // num - numerator , den - denominator
+                holder.numSubject = (TextView) item.findViewById( R.id.item_subject_numerator );
+                holder.numClassType = (TextView) item.findViewById( R.id.item_class_type_numerator );
+                holder.numTeacher = (TextView) item.findViewById( R.id.item_teacher_numerator );
+                holder.numAuditory = (TextView) item.findViewById( R.id.item_auditory_numerator );
+                holder.numComments = (TextView) item.findViewById( R.id.item_comments_numerator );
 
-            holder.classNumber.setText( new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getClassNumber() ) );
-            holder.classTime.setText( new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getTimeToTime().toString() ) );
-            holder.subject.setText( new StringBuilder()
-                    .append( daySchedule.getClassByPosition( position ).getSubject() ) );
-            holder.classType.setText( new StringBuilder()
-                    .append( "*" + daySchedule.getClassByPosition( position ).getClassTypeString() ) );
-            holder.teacher.setText( new StringBuilder()
-                    .append( daySchedule.getClassByPosition( position ).getTeacher() ) );
-            holder.auditory.setText( new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getAuditory() ) );
-            holder.comments.setText(  "Comments: " + new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getComments() ) );
+                holder.denSubject = (TextView) item.findViewById( R.id.item_subject_denominator );
+                holder.denClassType = (TextView) item.findViewById( R.id.item_class_type_denominator );
+                holder.denTeacher = (TextView) item.findViewById( R.id.item_teacher_denominator );
+                holder.denAuditory = (TextView) item.findViewById( R.id.item_auditory_denominator );
+                holder.denComments = (TextView) item.findViewById( R.id.item_comments_denominator );
 
-            holder.button.setOnClickListener( clickListener );
-            item.setTag( holder );
-        }
-        else
-        {
-            holder = (ViewHolder) item.getTag();
-            holder.classNumber.setText( new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getClassNumber() ) );
-            holder.classTime.setText( new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getTimeToTime().toString() ) );
-            holder.subject.setText( new StringBuilder()
-                    .append( daySchedule.getClassByPosition( position ).getSubject() ) );
-            holder.classType.setText( "*" + new StringBuilder()
-            .append( daySchedule.getClassByPosition( position ).getClassTypeString() ) );
-            holder.teacher.setText( new StringBuilder()
-                    .append( daySchedule.getClassByPosition( position ).getTeacher() ) );
-            holder.auditory.setText( new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getAuditory() ) );
-            holder.comments.setText(  "Comments: " + new StringBuilder().append( daySchedule.getClassByPosition( position )
-                    .getComments() ) );
-        }
+                holder.button = (ImageButton) item.findViewById( R.id.button_week_type );
 
+                if ( numeratorClass != null )
+                {
+                    holder.classNumber.setText( new StringBuilder().append( numeratorClass.getClassNumber() ) );
+                    holder.classTime.setText( new StringBuilder().append( numeratorClass.getTimeToTime().toString() ) );
+
+                    holder.numSubject.setText( new StringBuilder().append( numeratorClass.getSubject() ) );
+                    holder.numClassType
+                            .setText( new StringBuilder().append( "*" + numeratorClass.getClassTypeString() ) );
+                    holder.numTeacher.setText( new StringBuilder().append( numeratorClass.getTeacher() ) );
+                    holder.numAuditory.setText( new StringBuilder().append( numeratorClass.getAuditory() ) );
+                    holder.numComments.setText( "Comments: "
+                            + new StringBuilder().append( numeratorClass.getComments() ) );
+
+                }
+                else
+                {
+                    holder.numSubject.setText( " " );
+                    holder.numClassType.setText( " " );
+                    holder.numTeacher.setText( " " );
+                    holder.numAuditory.setText( " " );
+                    holder.numComments.setText( " " );
+                }
+                if ( denominatorClass != null )
+                {
+                    if ( numeratorClass == null )
+                    {
+                        holder.classNumber.setText( new StringBuilder().append( denominatorClass.getClassNumber() ) );
+                        holder.classTime.setText( new StringBuilder().append( denominatorClass.getTimeToTime()
+                                .toString() ) );
+
+                    }
+                    holder.denSubject.setText( new StringBuilder().append( denominatorClass.getSubject() ) );
+                    holder.denClassType.setText( new StringBuilder().append( "*"
+                            + denominatorClass.getClassTypeString() ) );
+                    holder.denTeacher.setText( new StringBuilder().append( denominatorClass.getTeacher() ) );
+                    holder.denAuditory.setText( new StringBuilder().append( denominatorClass.getAuditory() ) );
+                    holder.denComments.setText( "Comments: "
+                            + new StringBuilder().append( denominatorClass.getComments() ) );
+                }
+                else
+                {
+                    holder.denSubject.setText( " " );
+                    holder.denClassType.setText( " " );
+                    holder.denTeacher.setText( " " );
+                    holder.denAuditory.setText( " " );
+                    holder.denComments.setText( " " );
+                }
+
+                holder.button.setOnClickListener( clickListener );
+                item.setTag( holder );
+
+            }
+            else
+            {
+                holder = (ViewHolder) item.getTag();
+
+                if ( numeratorClass != null )
+                {
+                    holder.classNumber.setText( new StringBuilder().append( numeratorClass.getClassNumber() ) );
+                    holder.classTime.setText( new StringBuilder().append( numeratorClass.getTimeToTime().toString() ) );
+
+                    holder.numSubject.setText( new StringBuilder().append( numeratorClass.getSubject() ) );
+                    holder.numClassType
+                            .setText( new StringBuilder().append( "*" + numeratorClass.getClassTypeString() ) );
+                    holder.numTeacher.setText( new StringBuilder().append( numeratorClass.getTeacher() ) );
+                    holder.numAuditory.setText( new StringBuilder().append( numeratorClass.getAuditory() ) );
+                    holder.numComments.setText( "Comments: "
+                            + new StringBuilder().append( numeratorClass.getComments() ) );
+
+                }
+                else
+                {
+
+                    holder.numSubject.setText( " " );
+                    holder.numClassType.setText( " " );
+                    holder.numTeacher.setText( " " );
+                    holder.numAuditory.setText( " " );
+                    holder.numComments.setText( " " );
+                }
+                if ( denominatorClass != null )
+                {
+                    if ( numeratorClass == null )
+
+                    {
+                        holder.classNumber.setText( new StringBuilder().append( denominatorClass.getClassNumber() ) );
+                        holder.classTime.setText( new StringBuilder().append( denominatorClass.getTimeToTime()
+                                .toString() ) );
+
+                    }
+                    holder.denSubject.setText( new StringBuilder().append( denominatorClass.getSubject() ) );
+                    holder.denClassType.setText( new StringBuilder().append( "*"
+                            + denominatorClass.getClassTypeString() ) );
+                    holder.denTeacher.setText( new StringBuilder().append( denominatorClass.getTeacher() ) );
+                    holder.denAuditory.setText( new StringBuilder().append( denominatorClass.getAuditory() ) );
+                    holder.denComments.setText( "Comments: "
+                            + new StringBuilder().append( denominatorClass.getComments() ) );
+                }
+                else
+                {
+                    holder.denSubject.setText( " " );
+                    holder.denClassType.setText( " " );
+                    holder.denTeacher.setText( " " );
+                    holder.denAuditory.setText( " " );
+                    holder.denComments.setText( " " );
+                }
+            }
         return item;
     }
+
 
     static class ViewHolder
     {
         TextView    classNumber;
         TextView    classTime;
-        TextView    subject;
-        TextView    classType;
-        TextView    teacher;
-        TextView    auditory;
-        TextView    comments;
+        
+        TextView    numSubject;
+        TextView    numClassType;
+        TextView    numTeacher;
+        TextView    numAuditory;
+        TextView    numComments;
+
+        TextView    denSubject;
+        TextView    denClassType;
+        TextView    denTeacher;
+        TextView    denAuditory;
+        TextView    denComments;
 
         ImageButton button;
     }
-
 }

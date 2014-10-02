@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.schedule.app.R;
+
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.BaseAdapter;
 public class SeparatedListAdapter extends BaseAdapter
 {
 
-    public final Map<String, Adapter> sections            = new LinkedHashMap<String, Adapter>();
+    public final Map<String, DayScheduleAdapter> sections            = new LinkedHashMap<String, DayScheduleAdapter>();
     public final ArrayAdapter<String> headers;
     public final static int           TYPE_SECTION_HEADER = 0;
     public Context mcontext;
@@ -26,7 +27,7 @@ public class SeparatedListAdapter extends BaseAdapter
         mcontext = context;
     }
 
-    public void addSection( String section, Adapter adapter )
+    public void addSection( String section, DayScheduleAdapter adapter )
     {
         this.headers.add( section );
         this.sections.put( section, adapter );
@@ -113,17 +114,16 @@ public class SeparatedListAdapter extends BaseAdapter
     public View getView( int position, View convertView, ViewGroup parent )
     {
         int sectionnum = 0;
-        for( Object section : this.sections.keySet() )
+        for( String section : this.sections.keySet() )
         {
-            Adapter adapter = sections.get( section );
+            DayScheduleAdapter adapter = (DayScheduleAdapter) sections.get( section );
             int size = adapter.getCount() + 1;
-
+            
             // check if position inside this section
             if ( position == 0 )
-                return headers.getView( sectionnum, convertView, parent );
+                return headers.getView( sectionnum, null, parent );
             if ( position < size )
                 return adapter.getView( position - 1, convertView, parent );
-
             // otherwise jump into next section
             position -= size;
             sectionnum++;

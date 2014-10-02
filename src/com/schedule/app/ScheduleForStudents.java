@@ -2,7 +2,6 @@
 package com.schedule.app;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -19,13 +18,13 @@ import android.widget.Toast;
 public class ScheduleForStudents extends Activity
 {
 
-    public static final String[]   DAYS        = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
+    public static final String[]      DAYS = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
 
-    private GeneralSchedule            generalSchedule;
+    private GeneralSchedule           generalSchedule;
     static public ScheduleForStudents mainActivity;
 
     private SeparatedListAdapter      adapter;
-    private XmlFileManager             fileManager;
+    private XmlFileManager            fileManager;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -38,7 +37,7 @@ public class ScheduleForStudents extends Activity
         generalSchedule = new GeneralSchedule();
         for( String day : DAYS )
         {
-            generalSchedule.addDaySchedule( new DaySchedule( new ArrayList<UniversityClass>(), day ) );
+            generalSchedule.addDaySchedule( new DaySchedule( day ) );
         }
 
         fileManager = new XmlFileManager( generalSchedule );
@@ -66,7 +65,7 @@ public class ScheduleForStudents extends Activity
         {
             final DayScheduleAdapter dayAdapter = new DayScheduleAdapter( this,
                     generalSchedule.getDayScheduleByDayName( day ) );
-            
+
             adapter.addSection( day, dayAdapter );
         }
 
@@ -100,16 +99,17 @@ public class ScheduleForStudents extends Activity
             DaySchedule daySchedule = generalSchedule.getDayScheduleByDayName( day );
             if ( !daySchedule.addClass( newClass ) )
             {
-                Toast.makeText(this, "Schedule contains this class", Toast.LENGTH_SHORT).show();
+                Toast.makeText( this, "Schedule contains this class", Toast.LENGTH_SHORT ).show();
             }
             else
             {
-                //Add thread
+                daySchedule.sortClasses();
+                // Add thread
                 try
                 {
                     fileManager.saveScheduleToXmlFile();
                 }
-                catch( IOException exaption)
+                catch( IOException exaption )
                 {
                     exaption.printStackTrace();
                 }

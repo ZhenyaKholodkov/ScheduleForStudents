@@ -7,7 +7,6 @@
     <string name="cd">Content Description</string>
     <string name="done">Done</string>
     
-    <string name="class_number">Class Number</string>
     
     <string name="zero">Null</string>
     <string name="first">First</string>
@@ -26,6 +25,10 @@
     <string name="subject">Subject</string>
     <string name="teacher">Teacher</string>
     <string name="auditory">Auditory</string>
+    <string name="class_type">Class Type</string>
+    <string name="class_time">Class Time</string>
+    <string name="class_number">Class Number</string>
+    
     
     <string name="comments">Comments</string>
 </resources>

@@ -13,6 +13,12 @@
         <item name="android:layout_width">@dimen/lvDividerWidth</item>
         <item name="android:background">@color/lvDividerColor</item>
     </style>
+    <style name="listViewHorizontalDivider">
+        <item name="android:layout_marginLeft">@dimen/lvDividerMargin</item>
+        <item name="android:layout_marginRight">@dimen/lvDividerMargin</item>
+        <item name="android:layout_height">@dimen/lvDividerHeight</item>
+        <item name="android:background">@color/lvDividerColor</item>
+    </style>
     
     <style name="listViewHeaderItem">
         <item name="android:textStyle">bold</item>

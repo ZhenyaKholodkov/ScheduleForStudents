@@ -5,73 +5,130 @@ import java.util.*;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import android.util.Log;
 
 public class DaySchedule
 {
+    private String                  nameOfDay;
+    private List<UniversityClass[]> pairClasses;
 
-    private List<UniversityClass> classes;
-    private String                nameOfDay;
-
-    public DaySchedule( List<UniversityClass> classes, String nameOfDay )
+    public DaySchedule( String nameOfDay )
     {
-        this.classes = classes;
         this.nameOfDay = nameOfDay;
+
+        pairClasses = new ArrayList<UniversityClass[]>( 6 );
+
     }
 
     public boolean addClass( UniversityClass universityClass )
     {
-        if ( isScheduleContainClass( universityClass ) )
+        UniversityClass[] currentPair = getPairByClassNumber( universityClass.getClassNumber() );
+        if ( currentPair != null )
         {
-            return false;
+            if ( containsClassWithClassNumberAndWeekType( universityClass.getClassNumber(),
+                    universityClass.getWeekType() ) )
+            {
+                return false;
+            }
+            else
+            {
+                currentPair[universityClass.getWeekType()] = universityClass;
+                return true;
+            }
         }
         else
         {
-            classes.add( universityClass );
+            UniversityClass[] pair = new UniversityClass[2];
+            pair[universityClass.getWeekType()] = universityClass;
+            pairClasses.add( pair );
             return true;
         }
     }
 
-    public boolean isScheduleContainClass( UniversityClass universityClass )
+    public UniversityClass[] getPairByClassNumber( int classNumber )
     {
-        for( UniversityClass currentClass : classes )
+        for( UniversityClass[] pair : pairClasses )
         {
-            if ( currentClass.getClassNumber() == universityClass.getClassNumber() )
+            if ( pair[UniversityClass.NUMERATOR] == null )
             {
-                if ( currentClass.getWeekType() == universityClass.getWeekType() )
-                {
+                if ( pair[UniversityClass.DENOMINATOR].getClassNumber() == classNumber )
+                    return pair;
+            }
+            else
+            {
+                if ( pair[UniversityClass.NUMERATOR].getClassNumber() == classNumber )
+                    return pair;
+            }
+        }
+        return null;
+    }
+
+    public boolean containsPairWithClassNumber( int classNumber )
+    {
+        for( UniversityClass[] pair : pairClasses )
+        {
+            if ( pair[UniversityClass.NUMERATOR] == null )
+            {
+                if ( pair[UniversityClass.DENOMINATOR].getClassNumber() == classNumber )
                     return true;
-                }
+            }
+            else
+            {
+                if ( pair[UniversityClass.NUMERATOR].getClassNumber() == classNumber )
+                    return true;
             }
         }
         return false;
     }
 
-    public boolean isClassesEmpty()
+    private boolean containsClassWithClassNumberAndWeekType( int classNumber, int WeekType )
     {
-        return classes.isEmpty();
+        for( UniversityClass[] pair : pairClasses )
+        {
+            UniversityClass currentClass = pair[WeekType];
+            if ( currentClass != null )
+            {
+                if ( currentClass.getClassNumber() == classNumber )
+                    return true;
+            }
+        }
+        return false;
     }
 
-    public int getCountOfClasses()
+    public boolean isScheduleContainClass( UniversityClass universityClass )
     {
-        return classes.size();
+        if ( pairClasses.get( universityClass.getClassNumber() )[universityClass.getWeekType()] != null )
+            return true;
+        else
+            return false;
     }
 
-    public UniversityClass getClassByPosition( int position )
-    {
-        return classes.get( position );
-    }
-
-    public void removeByPosition( int position )
+    public UniversityClass getNumeratorClassAt( int position )
     {
         try
         {
-            classes.remove( position );
+            return pairClasses.get( position )[UniversityClass.NUMERATOR];
         }
         catch( IndexOutOfBoundsException exception )
         {
-            Log.d( "Logs", exception.getMessage() );
+            return null;
         }
+    }
+
+    public UniversityClass getDenominatorClassAt( int position )
+    {
+        try
+        {
+            return pairClasses.get( position )[UniversityClass.DENOMINATOR];
+        }
+        catch( IndexOutOfBoundsException exception )
+        {
+            return null;
+        }
+    }
+
+    public int getCountOfPairs()
+    {
+        return pairClasses.size();
     }
 
     public String getNameOfDay()
@@ -79,19 +136,9 @@ public class DaySchedule
         return this.nameOfDay;
     }
 
-    public void clearClasses()
+    public void sortClasses()
     {
-        classes.clear();
-    }
-
-    public void addAll( List<UniversityClass> collection )
-    {
-        classes.addAll( collection );
-    }
-
-    public List<UniversityClass> getClasses()
-    {
-        return classes;
+        Collections.sort( pairClasses, UniversityClass.UniversityClassComparator );
     }
 
     public void getDayScheduleInXmlIntroduction( XmlSerializer serializer )
@@ -100,11 +147,17 @@ public class DaySchedule
         {
             serializer.startTag( "", nameOfDay );
 
-            for( UniversityClass currentClass : classes )
+            for( UniversityClass[] pair : pairClasses )
             {
-                serializer.startTag( "", XmlFileManager.CLASS );
-                currentClass.getUniversityClassInXmlIntroduction( serializer );
-                serializer.endTag( "", XmlFileManager.CLASS );
+                for( UniversityClass currentClass : pair )
+                {
+                    if ( currentClass != null )
+                    {
+                        serializer.startTag( "", XmlFileManager.CLASS );
+                        currentClass.getUniversityClassInXmlIntroduction( serializer );
+                        serializer.endTag( "", XmlFileManager.CLASS );
+                    }
+                }
             }
             serializer.endTag( "", nameOfDay );
         }
