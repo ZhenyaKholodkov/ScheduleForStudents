@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@drawable/list_item_selector">
 
     <LinearLayout
         android:layout_width="120dp"
@@ -36,11 +37,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="400dp"
+        android:layout_width="350dp"
         android:layout_height="200dp"
         android:orientation="vertical" >
 
         <LinearLayout
+            android:id="@+id/numerator"
             android:layout_width="400dp"
             android:layout_height="99dp"
             android:orientation="vertical" >
@@ -101,8 +103,9 @@
             android:id="@+id/horizontal_divider_first"
             style="@style/listViewHorizontalDivider"
             android:layout_width="fill_parent" />
-        
+
         <LinearLayout
+            android:id="@+id/denominator"
             android:layout_width="400dp"
             android:layout_height="0dp"
             android:layout_weight="0.14"
@@ -162,26 +165,86 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="60dp"
+        android:layout_width="135dp"
         android:layout_height="200dp"
         android:orientation="horizontal" >
 
-        <View
-            android:id="@+id/vertical_divider_second"
-            style="@style/listViewVerticalDivider"
-            android:layout_height="fill_parent" />
+            <View
+                android:id="@+id/vertical_divider_second"
+                style="@style/listViewVerticalDivider"
+                android:layout_height="fill_parent" />
 
-        <ImageButton
-            android:id="@+id/button_week_type"
-            style="@style/listViewItemButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="78dp"
-            android:background="@android:drawable/list_selector_background"
-            android:clickable="true"
-            android:contentDescription="@string/cd"
-            android:src="@drawable/ic_action_edit" />
+        <LinearLayout
+            android:id="@+id/layout_edit_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/button_edit_numerator"
+                    style="@style/listViewItemButtonStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:drawable/list_selector_background"
+                    android:clickable="true"
+                    android:contentDescription="@string/cd"
+                    android:src="@drawable/ic_action_edit" />
+
+                <ImageButton
+                    android:id="@+id/button_delete_numerator"
+                    style="@style/listViewItemButtonStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@android:drawable/list_selector_background"
+                    android:clickable="true"
+                    android:contentDescription="@string/cd"
+                    android:src="@drawable/ic_delete" />
+            </LinearLayout>
+
+                <View
+            android:id="@+id/horizontal_divider_second"
+            style="@style/listViewHorizontalDivider"
+            android:layout_width="fill_parent" />
+        
+			<LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:id="@+id/button_edit_denominator"
+                    style="@style/listViewItemButtonStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:drawable/list_selector_background"
+                    android:clickable="true"
+                    android:contentDescription="@string/cd"
+                    android:src="@drawable/ic_action_edit" />
+
+                <ImageButton
+                    android:id="@+id/button_delete_denominator"
+                    style="@style/listViewItemButtonStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@android:drawable/list_selector_background"
+                    android:clickable="true"
+                    android:contentDescription="@string/cd"
+                    android:src="@drawable/ic_delete" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
+ 
 </LinearLayout>

@@ -54,7 +54,34 @@ public class SeparatedListAdapter extends BaseAdapter
         }
         return null;
     }
+    
+    public void removeItem( int position )
+    {
+        for( Object section : this.sections.keySet() )
+        {
+            DayScheduleAdapter adapter = sections.get( section );
+            int size = adapter.getCount() + 1;
 
+            // check if position inside this section
+            if ( position == 0 )
+                return;
+            if ( position < size )
+            {
+                adapter.removeItem( position - 1 );
+                return;
+            }
+
+            // otherwise jump into next section
+            position -= size;
+        }
+    }
+    
+    public void clear() {
+        headers.clear();
+        sections.clear();
+        notifyDataSetInvalidated();
+    }
+    
     public int getCount()
     {
         // total together all sections, plus one for each section header
@@ -99,6 +126,13 @@ public class SeparatedListAdapter extends BaseAdapter
         return false;
     }
 
+    @Override
+    public boolean areAllItemsEnabled()
+    {
+        return false;
+    }
+
+    @Override
     public boolean isEnabled( int position )
     {
         return (getItemViewType( position ) != TYPE_SECTION_HEADER);
@@ -110,6 +144,26 @@ public class SeparatedListAdapter extends BaseAdapter
         hAdapter.notifyDataSetChanged();
     }
 
+    public void startEditMode()
+    {
+        for( String section : this.sections.keySet() )
+        {
+            DayScheduleAdapter adapter = (DayScheduleAdapter) sections.get( section );
+            adapter.startEditMode();
+            adapter.notifyDataSetChanged();
+        }
+    }
+    
+    public void finishEditMode()
+    {
+        for( String section : this.sections.keySet() )
+        {
+            DayScheduleAdapter adapter = (DayScheduleAdapter) sections.get( section );
+            adapter.finishEditMode();
+            adapter.notifyDataSetChanged();
+        }
+    }
+    
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="798dp"
+        android:orientation="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/remove_numerator_button"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="Remove Numerator" />
+
+            <Button
+                android:id="@+id/remove_denominator_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Remove Denominator" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:layout_marginTop="10dp"
+            android:text="Day"
+            android:textSize="26sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/class_number"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radio_class_numbers"
+            android:layout_width="558dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/null_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:checked="true"
+                android:text="@string/zero" />
+
+            <RadioButton
+                android:id="@+id/first_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/first" />
+
+            <RadioButton
+                android:id="@+id/second_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/second" />
+
+            <RadioButton
+                android:id="@+id/third_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/third" />
+
+            <RadioButton
+                android:id="@+id/fourth_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/fourth" />
+
+            <RadioButton
+                android:id="@+id/fifth_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/fifth" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:layout_marginTop="20dp"
+            android:text="@string/numerator"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="490dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center" >
+
+            <LinearLayout
+                android:layout_width="199dp"
+                android:layout_height="181dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0.42"
+                    android:text="@string/subject" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0.42"
+                    android:text="@string/teacher" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0.18"
+                    android:text="@string/auditory" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="213dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <EditText
+                    android:id="@+id/subject_edit_numerator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" >
+
+                </EditText>
+
+                <EditText
+                    android:id="@+id/teacher_edit_numerator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/auditory_edit_numerator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radio_class_type_numerator"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/lecture_numerator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:checked="true"
+                android:text="@string/lecture" />
+
+            <RadioButton
+                android:id="@+id/labs_numerator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:text="@string/labs" />
+
+            <RadioButton
+                android:id="@+id/practice_numerator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:text="@string/practice" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:paddingLeft="55dp"
+            android:text="@string/comments"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/comments_numerator"
+            android:layout_width="489dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:gravity="center_vertical|top"
+            android:maxLines="10" />
+
+        <View
+            android:id="@+id/horizontal_divider_first"
+            style="@style/listViewHorizontalDivider"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:layout_marginTop="10dp"
+            android:text="@string/denominator"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="490dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center" >
+
+            <LinearLayout
+                android:layout_width="199dp"
+                android:layout_height="181dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0.42"
+                    android:text="@string/subject" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0.42"
+                    android:text="@string/teacher" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0.18"
+                    android:text="@string/auditory" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="213dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal|center"
+                android:orientation="vertical" >
+
+                <EditText
+                    android:id="@+id/subject_edit_denominator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" >
+
+                </EditText>
+
+                <EditText
+                    android:id="@+id/teacher_edit_denominator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/auditory_edit_denominator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radio_class_type_denominator"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/lecture_denominator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:checked="true"
+                android:text="@string/lecture" />
+
+            <RadioButton
+                android:id="@+id/labs_denominator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:text="@string/labs" />
+
+            <RadioButton
+                android:id="@+id/practice_denominator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:text="@string/practice" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:paddingLeft="55dp"
+            android:text="@string/comments"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/comments_denominator"
+            android:layout_width="489dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:ems="10"
+            android:gravity="center_vertical|top"
+            android:maxLines="10" />
+    </LinearLayout>
+
+</ScrollView>

@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -172,6 +173,19 @@ public class UniversityClass implements Parcelable
                 return "Practice";
         }
         return "Undefine";
+    }
+    
+    @SuppressLint("NewApi")
+	public boolean isClassFilled()
+    {
+        if ( !subject.isEmpty() && !teacher.isEmpty() && !auditory.isEmpty() )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void getUniversityClassInXmlIntroduction( XmlSerializer serializer )

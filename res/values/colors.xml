@@ -4,7 +4,14 @@
     <color name="primaryTextColor">#333333</color>
     <color name="secondaryTextColor">#777777</color>
 
+     <color name="light_grey">#cccccc</color>
+    
     <color name="goblinGreen">#168686</color>
     <color name="lvHeaderDividerColor">#168686</color>
     <color name="lvDividerColor">#E0E0E0</color>
+	<color name="orange">#FFA500</color>
+	<color name="darkOrange">#FF8C00</color>
+	<color name="whiteSmoke">#F5F5F5</color>
+	<color name="lightGrey">#D3D3D3</color>
+	<color name="azure">#F0FFFF</color>
 </resources>

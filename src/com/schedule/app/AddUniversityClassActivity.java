@@ -1,13 +1,19 @@
 
 package com.schedule.app;
 
+import java.util.ArrayList;
+
 import com.schedule.model.UniversityClass;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,13 +27,19 @@ public class AddUniversityClassActivity extends Activity
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_add_university_class );
+        setContentView( R.layout.activity_fill_class_data );
 
         intent = getIntent();
         day = intent.getStringExtra( "day" );
 
         TextView headrText = (TextView) findViewById( R.id.header_text );
         headrText.setText( new StringBuilder( day ) );
+        
+        Button removeNumeratorButton = (Button) findViewById( R.id.remove_numerator_button);
+        Button removeDenominatorButton = (Button) findViewById( R.id.remove_denominator_button);
+        
+        removeNumeratorButton.setOnClickListener( OnClickRemoveNumeratorButton );
+        removeDenominatorButton.setOnClickListener( OnClickRemoveDenominatorButton );
 
     }
 
@@ -45,10 +57,17 @@ public class AddUniversityClassActivity extends Activity
         switch ( item.getItemId() )
         {
             case R.id.action_done:
-                UniversityClass newClass = onClickDone();
+                ArrayList<UniversityClass> Pair = onClickDone();
 
-                intent.putExtra( UniversityClass.class.getCanonicalName(), newClass );
-                setResult( getNumberOfDay( day ), intent );
+                if ( Pair != null )
+                {
+                    intent.putParcelableArrayListExtra( UniversityClass.class.getCanonicalName(), Pair);
+                    setResult( getNumberOfDay( day ), intent );
+                }
+                else
+                {
+                    setResult( -1, intent );
+                }
 
                 finish();
                 return true;
@@ -77,10 +96,14 @@ public class AddUniversityClassActivity extends Activity
         return -1;
     }
 
-    private UniversityClass onClickDone()
+    @SuppressLint("NewApi")
+    private ArrayList<UniversityClass> onClickDone()
     {
 
-        UniversityClass newClass = new UniversityClass();
+        ArrayList<UniversityClass> newPair = new ArrayList<UniversityClass>( 2 );
+
+        UniversityClass numeratorClass = new UniversityClass();
+        UniversityClass denominatorClass = new UniversityClass();
         int radioId;
 
         RadioGroup radioClassNumbers = (RadioGroup) findViewById( R.id.radio_class_numbers );
@@ -88,64 +111,188 @@ public class AddUniversityClassActivity extends Activity
         switch ( radioId )
         {
             case R.id.null_class:
-                newClass.setClassNumber( UniversityClass.ZERO );
+                numeratorClass.setClassNumber( UniversityClass.ZERO );
+                denominatorClass.setClassNumber( UniversityClass.ZERO );
                 break;
             case R.id.first_class:
-                newClass.setClassNumber( UniversityClass.FIRST );
+                numeratorClass.setClassNumber( UniversityClass.FIRST );
+                denominatorClass.setClassNumber( UniversityClass.FIRST );
                 break;
             case R.id.second_class:
-                newClass.setClassNumber( UniversityClass.SECOND );
+                numeratorClass.setClassNumber( UniversityClass.SECOND );
+                denominatorClass.setClassNumber( UniversityClass.SECOND );
                 break;
             case R.id.third_class:
-                newClass.setClassNumber( UniversityClass.THIRD );
+                numeratorClass.setClassNumber( UniversityClass.THIRD );
+                denominatorClass.setClassNumber( UniversityClass.THIRD );
                 break;
             case R.id.fourth_class:
-                newClass.setClassNumber( UniversityClass.FOURTH );
+                numeratorClass.setClassNumber( UniversityClass.FOURTH );
+                denominatorClass.setClassNumber( UniversityClass.FOURTH );
                 break;
             case R.id.fifth_class:
-                newClass.setClassNumber( UniversityClass.FIFTH );
+                numeratorClass.setClassNumber( UniversityClass.FIFTH );
+                denominatorClass.setClassNumber( UniversityClass.FIFTH );
                 break;
         }
 
-        EditText subject = (EditText) findViewById( R.id.subject_edit );
-        newClass.setSubject( subject.getText().toString() );
+        // fill Numerator class
+        EditText numeratorSubject = (EditText) findViewById( R.id.subject_edit_numerator );
+        EditText numeratorTeacher = (EditText) findViewById( R.id.teacher_edit_numerator );
+        EditText numeratorAuditory = (EditText) findViewById( R.id.auditory_edit_numerator );
 
-        EditText teacher = (EditText) findViewById( R.id.teacher_edit );
-        newClass.setTeacher( teacher.getText().toString() );
-
-        EditText auditory = (EditText) findViewById( R.id.auditory_edit );
-        newClass.setAuditory( auditory.getText().toString() );
-
-        RadioGroup radioWeekType = (RadioGroup) findViewById( R.id.radio_week_type );
-        radioId = radioWeekType.getCheckedRadioButtonId();
-        switch ( radioId )
+        if ( numeratorSubject.isEnabled() && numeratorTeacher.isEnabled() && numeratorAuditory.isEnabled() )
         {
-            case R.id.numerator:
-                newClass.setWeekType( UniversityClass.NUMERATOR );
-                break;
-            case R.id.denominator:
-                newClass.setWeekType( UniversityClass.DENOMINATOR );
-                break;
-        }
+            numeratorClass.setSubject( numeratorSubject.getText().toString() );
+            numeratorClass.setTeacher( numeratorTeacher.getText().toString() );
+            numeratorClass.setAuditory( numeratorAuditory.getText().toString() );
 
-        RadioGroup radioClassType = (RadioGroup) findViewById( R.id.radio_class_type );
-        radioId = radioClassType.getCheckedRadioButtonId();
-        switch ( radioId )
+            if ( numeratorClass.isClassFilled() )
+            {
+                RadioGroup numeratorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_numerator );
+                radioId = numeratorRadioClassType.getCheckedRadioButtonId();
+                switch ( radioId )
+                {
+                    case R.id.lecture_numerator:
+                        numeratorClass.setClassType( UniversityClass.LECTURE );
+                        break;
+                    case R.id.labs_numerator:
+                        numeratorClass.setClassType( UniversityClass.LABS );
+                        break;
+                    case R.id.practice_numerator:
+                        numeratorClass.setClassType( UniversityClass.PRACTICE );
+                        break;
+                }
+
+                EditText numeratorComments = (EditText) findViewById( R.id.comments_numerator );
+                numeratorClass.setComments( numeratorComments.getText().toString() );
+
+                numeratorClass.setWeekType( UniversityClass.NUMERATOR );
+            }
+            else
+            {
+                numeratorClass = null;
+            }
+        }
+        else
         {
-            case R.id.lecture:
-                newClass.setClassType( UniversityClass.LECTURE );
-                break;
-            case R.id.labs:
-                newClass.setClassType( UniversityClass.LABS );
-                break;
-            case R.id.practice:
-                newClass.setClassType( UniversityClass.PRACTICE );
-                break;
+            numeratorClass = null;
+        }
+        // fill denominator class
+        EditText denominatorSubject = (EditText) findViewById( R.id.subject_edit_denominator );
+        EditText denominatorTeacher = (EditText) findViewById( R.id.teacher_edit_denominator );
+        EditText denominatorAuditory = (EditText) findViewById( R.id.auditory_edit_denominator );
+
+        if ( denominatorSubject.isEnabled() && denominatorTeacher.isEnabled() && denominatorAuditory.isEnabled() )
+        {
+
+            denominatorClass.setSubject( denominatorSubject.getText().toString() );
+            denominatorClass.setTeacher( denominatorTeacher.getText().toString() );
+            denominatorClass.setAuditory( denominatorAuditory.getText().toString() );
+
+            if ( denominatorClass.isClassFilled() )
+            {
+                RadioGroup denominatorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_denominator );
+                radioId = denominatorRadioClassType.getCheckedRadioButtonId();
+                switch ( radioId )
+                {
+                    case R.id.lecture_denominator:
+                        denominatorClass.setClassType( UniversityClass.LECTURE );
+                        break;
+                    case R.id.labs_denominator:
+                        denominatorClass.setClassType( UniversityClass.LABS );
+                        break;
+                    case R.id.practice_denominator:
+                        denominatorClass.setClassType( UniversityClass.PRACTICE );
+                        break;
+                }
+
+                EditText denominatorComments = (EditText) findViewById( R.id.comments_denominator );
+                denominatorClass.setComments( denominatorComments.getText().toString() );
+
+                denominatorClass.setWeekType( UniversityClass.DENOMINATOR );
+            }
+            else
+            {
+                denominatorClass = null;
+            }
+        }
+        else
+        {
+            denominatorClass = null;
         }
 
-        EditText comments = (EditText) findViewById( R.id.comments );
-        newClass.setComments( comments.getText().toString() );
-
-        return newClass;
+        if ( numeratorClass == null && denominatorClass == null )
+        {
+            newPair = null;
+        }
+        else
+        {
+            if ( numeratorClass != null )
+                newPair.add( numeratorClass );
+            if ( denominatorClass != null )
+                newPair.add( denominatorClass );
+        }
+        return newPair;
     }
+
+    private OnClickListener OnClickRemoveNumeratorButton = new OnClickListener()
+    {
+
+        @SuppressLint("NewApi")
+		@Override
+        public void onClick( View v )
+        {
+            EditText numeratorSubject = (EditText) findViewById( R.id.subject_edit_numerator );
+            numeratorSubject.setText( new StringBuilder("") );
+            numeratorSubject.setEnabled( false );
+
+            EditText numeratorTeacher = (EditText) findViewById( R.id.teacher_edit_numerator );
+            numeratorTeacher.setText( new StringBuilder("") );
+            numeratorTeacher.setEnabled( false );
+
+            EditText numeratorAuditory = (EditText) findViewById( R.id.auditory_edit_numerator );
+            numeratorAuditory.setText( new StringBuilder("") );
+            numeratorAuditory.setEnabled( false );
+            
+
+            RadioGroup numeratorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_numerator );
+            numeratorRadioClassType.setEnabled( false );
+
+            EditText numeratorComments = (EditText) findViewById( R.id.comments_numerator );
+            numeratorComments.setText( new StringBuilder("") );
+            numeratorComments.setEnabled( false );
+        }
+        
+    };
+    
+    private OnClickListener OnClickRemoveDenominatorButton = new OnClickListener()
+    {
+
+        @SuppressLint("NewApi")
+        @Override
+        public void onClick( View v )
+        {
+            EditText denominatorSubject = (EditText) findViewById( R.id.subject_edit_denominator );
+            denominatorSubject.setText( new StringBuilder("") );
+            denominatorSubject.setEnabled( false );
+
+            EditText denominatorTeacher = (EditText) findViewById( R.id.teacher_edit_denominator );
+            denominatorTeacher.setText( new StringBuilder("") );
+            denominatorTeacher.setEnabled( false );
+
+            EditText denominatorAuditory = (EditText) findViewById( R.id.auditory_edit_denominator );
+            denominatorAuditory.setText( new StringBuilder("") );
+            denominatorAuditory.setEnabled( false );
+            
+
+            RadioGroup denominatorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_denominator );
+            denominatorRadioClassType.setEnabled( false );
+
+            EditText denominatorComments = (EditText) findViewById( R.id.comments_denominator );
+            denominatorComments.setText( new StringBuilder("") );
+            denominatorComments.setEnabled( false );
+        }
+        
+    };
 }

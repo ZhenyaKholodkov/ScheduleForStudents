@@ -44,6 +44,28 @@ public class DaySchedule
         }
     }
 
+    public boolean addPair( UniversityClass[] newPair )
+    {
+        return pairClasses.add( newPair );
+    }
+    
+    public void removePair( int position )
+    {
+        try
+        {
+            pairClasses.remove( position );
+        }
+        catch( Exception exception )
+        {
+            exception.printStackTrace();
+        }
+    }
+    
+    public UniversityClass[] getPairByPosition( int position )
+    {
+        return pairClasses.get( position );
+    }
+    
     public UniversityClass[] getPairByClassNumber( int classNumber )
     {
         for( UniversityClass[] pair : pairClasses )
