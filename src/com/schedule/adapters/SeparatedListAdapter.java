@@ -55,6 +55,21 @@ public class SeparatedListAdapter extends BaseAdapter
         return null;
     }
     
+    public String getHeader( int position )
+    {
+        for( String section : this.sections.keySet() )
+        {
+            Adapter adapter = sections.get( section );
+            int size = adapter.getCount() + 1;
+
+            if ( position == 0 || position < size)
+                return section;
+            
+            position -= size;
+        }
+        return null;
+    }
+    
     public void removeItem( int position )
     {
         for( Object section : this.sections.keySet() )

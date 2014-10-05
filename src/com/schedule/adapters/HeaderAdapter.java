@@ -47,7 +47,7 @@ public class HeaderAdapter extends ArrayAdapter<String>
             @Override
             public void onClick( View view )
             {
-                ScheduleForStudents.mainActivity.openAddUniversityClass( headerText );
+                ScheduleForStudents.mainActivity.openFillUniversityClassDataActivity( headerText, null );
             }
         } );
 

@@ -97,13 +97,36 @@ public class ScheduleForStudents extends Activity
 
     }
 
-    public void openAddUniversityClass( String textHeader )
+    public void openFillUniversityClassDataActivity( String textHeader, ArrayList<UniversityClass> pairList)
     {
-        Intent intent = new Intent( this, AddUniversityClassActivity.class );
+        Intent intent = new Intent( this, FillUniversityClassDataActivity.class );
         intent.putExtra( "day", textHeader );
+
+        intent.putParcelableArrayListExtra( UniversityClass.class.getCanonicalName(), pairList );
+
         startActivityForResult( intent, 0 );
     }
 
+    public static UniversityClass[] ArrayListToArrayOfPairClasses( ArrayList<UniversityClass> list )
+    {
+        UniversityClass[] pair = new UniversityClass[2];
+        for( UniversityClass currentClass : list )
+        {
+            if ( currentClass.getWeekType() == UniversityClass.NUMERATOR )
+                pair[UniversityClass.NUMERATOR] = currentClass;
+            else
+                pair[UniversityClass.DENOMINATOR] = currentClass;
+        }
+        return pair;
+    }
+    
+    public ArrayList<UniversityClass> ArrayToArrayListOfPairClasses( UniversityClass[] pair )
+    {
+        ArrayList<UniversityClass> list = new ArrayList<UniversityClass>();
+        list.add( pair[0] );
+        list.add( pair[1] );
+        return list;
+    }
     @Override
     public boolean onCreateOptionsMenu( Menu menu )
     {
@@ -115,38 +138,68 @@ public class ScheduleForStudents extends Activity
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data )
     {
-        if ( resultCode != -1 )
+        if ( resultCode != FillUniversityClassDataActivity.FAILED )
         {
-            final String day = DAYS[resultCode];
-            
-            ArrayList<UniversityClass> arrayOfClasses = data.getParcelableArrayListExtra( UniversityClass.class
-                    .getCanonicalName() );
-     /*       UniversityClass denominatorClass = (UniversityClass) data.getParcelableExtra( UniversityClass.class
-                    .getCanonicalName() );*/
-            
-            UniversityClass[] newPair = new UniversityClass[2];
-            for( UniversityClass currentClass : arrayOfClasses )
+            if ( resultCode == FillUniversityClassDataActivity.EDIT )
             {
-                if ( currentClass.getWeekType() == UniversityClass.NUMERATOR )
-                    newPair[UniversityClass.NUMERATOR] = currentClass;
+                String day = data.getStringExtra( "day" );
+
+                ArrayList<UniversityClass> arrayOfClasses = data.getParcelableArrayListExtra( UniversityClass.class
+                        .getCanonicalName() );
+                
+                DaySchedule daySchedule = generalSchedule.getDayScheduleByDayName( day );
+                
+                UniversityClass[] pair = ArrayListToArrayOfPairClasses(arrayOfClasses);
+                
+                int position;
+                if(pair[UniversityClass.NUMERATOR] != null)
+                {
+                    position = daySchedule.getPostionByClassNumber( pair[UniversityClass.NUMERATOR].getClassNumber() );
+                }
                 else
-                    newPair[UniversityClass.DENOMINATOR] = currentClass;
-            }
-            
-            DaySchedule daySchedule = generalSchedule.getDayScheduleByDayName( day );
-            
-            if ( !daySchedule.addPair( newPair ) )
-            {
-                Toast.makeText( this, "Schedule contains this pair of class", Toast.LENGTH_SHORT ).show();
-            }
-            else
-            {
-                daySchedule.sortClasses();
+                {
+                    position = daySchedule.getPostionByClassNumber( pair[UniversityClass.DENOMINATOR].getClassNumber() );
+                }
+                
+                daySchedule.replacePair( position, pair );
 
                 SaveToFile savingThread = new SaveToFile();
                 savingThread.execute();
-                // update the section with changing
+                
                 adapter.update( day );
+                
+            }
+            if ( resultCode == FillUniversityClassDataActivity.ADD )
+            {
+                String day = data.getStringExtra( "day" );
+
+                ArrayList<UniversityClass> arrayOfClasses = data.getParcelableArrayListExtra( UniversityClass.class
+                        .getCanonicalName() );
+
+                UniversityClass[] newPair = new UniversityClass[2];
+                for( UniversityClass currentClass : arrayOfClasses )
+                {
+                    if ( currentClass.getWeekType() == UniversityClass.NUMERATOR )
+                        newPair[UniversityClass.NUMERATOR] = currentClass;
+                    else
+                        newPair[UniversityClass.DENOMINATOR] = currentClass;
+                }
+
+                DaySchedule daySchedule = generalSchedule.getDayScheduleByDayName( day );
+
+                if ( !daySchedule.addPair( newPair ) )
+                {
+                    Toast.makeText( this, "Schedule contains this pair of class", Toast.LENGTH_SHORT ).show();
+                }
+                else
+                {
+                    daySchedule.sortClasses();
+
+                    SaveToFile savingThread = new SaveToFile();
+                    savingThread.execute();
+                    // update the section with changing
+                    adapter.update( day );
+                }
             }
         }
     }
@@ -181,13 +234,16 @@ public class ScheduleForStudents extends Activity
                       }
                       generalList.clearChoices();
                       adapter.notifyDataSetChanged();
-                      mode.finish();
                       break;
                   case R.id.edit:
-                      Log.d("MTag",  "edit : " + String.valueOf( sbArray.keyAt(0) ) );
+                      int key = sbArray.keyAt(0);
+                      ArrayList<UniversityClass> pairList = ArrayToArrayListOfPairClasses((UniversityClass[])adapter.getItem( key ));
+                      String headerText = adapter.getHeader( key );
+                      ScheduleForStudents.mainActivity.openFillUniversityClassDataActivity( headerText, pairList );
                       break;
                       
               }
+              mode.finish();
           }
           return false;
         }

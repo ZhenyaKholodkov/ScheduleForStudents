@@ -61,6 +61,18 @@ public class DaySchedule
         }
     }
     
+    public void replacePair( int position, UniversityClass[] newPair )
+    {
+        try
+        {
+            pairClasses.set( position, newPair );
+        }
+        catch( UnsupportedOperationException exception )
+        {
+            exception.printStackTrace();
+        }
+    }
+    
     public UniversityClass[] getPairByPosition( int position )
     {
         return pairClasses.get( position );
@@ -82,6 +94,26 @@ public class DaySchedule
             }
         }
         return null;
+    }
+    
+    public int getPostionByClassNumber( int classNumber )
+    {
+        int postion = 0;
+        for( UniversityClass[] pair : pairClasses )
+        {
+            if ( pair[UniversityClass.NUMERATOR] == null )
+            {
+                if ( pair[UniversityClass.DENOMINATOR].getClassNumber() == classNumber )
+                    return postion;
+            }
+            else
+            {
+                if ( pair[UniversityClass.NUMERATOR].getClassNumber() == classNumber )
+                    return postion;
+            }
+            postion ++;
+        }
+        return -1;
     }
 
     public boolean containsPairWithClassNumber( int classNumber )

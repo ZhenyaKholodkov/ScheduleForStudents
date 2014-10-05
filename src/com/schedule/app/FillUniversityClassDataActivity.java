@@ -9,19 +9,44 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class AddUniversityClassActivity extends Activity
+public class FillUniversityClassDataActivity extends Activity
 {
     private Intent intent;
     private String day;
+    
+    private RadioGroup radioClassNumbers;
+    
+    private EditText numeratorSubject;
+    private EditText numeratorTeacher;
+    private EditText numeratorAuditory;
+    
+    private EditText denominatorSubject;
+    private EditText denominatorTeacher;
+    private EditText denominatorAuditory;
+    
+    private RadioGroup numeratorRadioClassType;
+    private RadioGroup denominatorRadioClassType;
+    
+    private EditText numeratorComments;
+    private EditText denominatorComments;
+    
+    private boolean editMode = false;
+    private ArrayList<UniversityClass> editPair = null;
+    
+    final public static int FAILED = -1;
+    final public static int EDIT = 0;
+    final public static int ADD = 1;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -29,20 +54,147 @@ public class AddUniversityClassActivity extends Activity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_fill_class_data );
 
+        numeratorSubject = (EditText) findViewById( R.id.subject_edit_numerator );
+        numeratorTeacher = (EditText) findViewById( R.id.teacher_edit_numerator );
+        numeratorAuditory = (EditText) findViewById( R.id.auditory_edit_numerator );
+        
+
+        denominatorSubject = (EditText) findViewById( R.id.subject_edit_denominator );
+        denominatorTeacher = (EditText) findViewById( R.id.teacher_edit_denominator );
+        denominatorAuditory = (EditText) findViewById( R.id.auditory_edit_denominator );
+        
+
+        radioClassNumbers = (RadioGroup) findViewById( R.id.radio_class_numbers );
+        
+        numeratorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_numerator );
+        denominatorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_denominator );
+
+        numeratorComments = (EditText) findViewById( R.id.comments_numerator );
+        denominatorComments = (EditText) findViewById( R.id.comments_denominator );
+
         intent = getIntent();
         day = intent.getStringExtra( "day" );
+        
+        editPair = intent.getParcelableArrayListExtra( UniversityClass.class
+                .getCanonicalName() );
+        
+        fillDataViews( );
 
         TextView headrText = (TextView) findViewById( R.id.header_text );
         headrText.setText( new StringBuilder( day ) );
-        
-        Button removeNumeratorButton = (Button) findViewById( R.id.remove_numerator_button);
-        Button removeDenominatorButton = (Button) findViewById( R.id.remove_denominator_button);
-        
+
+        Button removeNumeratorButton = (Button) findViewById( R.id.remove_numerator_button );
+        Button removeDenominatorButton = (Button) findViewById( R.id.remove_denominator_button );
+
         removeNumeratorButton.setOnClickListener( OnClickRemoveNumeratorButton );
         removeDenominatorButton.setOnClickListener( OnClickRemoveDenominatorButton );
-
     }
 
+    private void fillDataViews()
+    {
+        if ( editPair != null )
+        {
+
+            editMode = true;
+            UniversityClass numeratorClass = editPair.get( UniversityClass.NUMERATOR );
+            UniversityClass denominatorClass = editPair.get( UniversityClass.DENOMINATOR );
+
+            int classNumber;
+            if ( numeratorClass == null )
+            {
+                classNumber = denominatorClass.getClassNumber();
+            }
+            else
+            {
+                classNumber = numeratorClass.getClassNumber();
+            }
+            
+            RadioButton zero = (RadioButton) findViewById( R.id.null_class );
+            RadioButton first = (RadioButton) findViewById( R.id.first_class );
+            RadioButton second = (RadioButton) findViewById( R.id.second_class );
+            RadioButton third = (RadioButton) findViewById( R.id.third_class );
+            RadioButton fourth = (RadioButton) findViewById( R.id.fourth_class );
+            RadioButton fifth = (RadioButton) findViewById( R.id.fifth_class );
+
+            switch ( classNumber )
+            {
+                case UniversityClass.ZERO:
+                    zero.setChecked( true );
+                    break;
+                case UniversityClass.FIRST:
+                    first.setChecked( true );
+                    break;
+                case UniversityClass.SECOND:
+                    second.setChecked( true );
+                    break;
+                case UniversityClass.THIRD:
+                    third.setChecked( true );
+                    break;
+                case UniversityClass.FOURTH:
+                    fourth.setChecked( true );
+                    break;
+                case UniversityClass.FIFTH:
+                    fifth.setChecked( true );
+                    break;
+            }
+            zero.setEnabled( false );
+            first.setEnabled( false );
+            second.setEnabled( false );
+            third.setEnabled( false );
+            fourth.setEnabled( false );
+            fifth.setEnabled( false );
+
+            if ( numeratorClass != null )
+            {
+                numeratorSubject.setText( new StringBuilder( numeratorClass.getSubject() ) );
+                numeratorTeacher.setText( new StringBuilder( numeratorClass.getTeacher() ) );
+                numeratorAuditory.setText( new StringBuilder( numeratorClass.getAuditory() ) );
+                numeratorComments.setText( new StringBuilder( numeratorClass.getComments() ) );
+
+                switch ( numeratorClass.getClassType() )
+                {
+                    case UniversityClass.LECTURE:
+                        RadioButton numeratorRadioLecture = (RadioButton) findViewById( R.id.lecture_numerator );
+                        numeratorRadioLecture.setChecked( true );
+                        break;
+                    case UniversityClass.LABS:
+                        RadioButton numeratorRadioLabs = (RadioButton) findViewById( R.id.labs_numerator );
+                        numeratorRadioLabs.setChecked( true );
+                        break;
+                    case UniversityClass.PRACTICE:
+                        RadioButton numeratorRadioPractice = (RadioButton) findViewById( R.id.practice_numerator );
+                        numeratorRadioPractice.setChecked( true );
+                        break;
+                }
+            }
+
+            if ( denominatorClass != null )
+            {
+                denominatorSubject.setText( new StringBuilder( denominatorClass.getSubject() ) );
+                denominatorTeacher.setText( new StringBuilder( denominatorClass.getTeacher() ) );
+                denominatorAuditory.setText( new StringBuilder( denominatorClass.getAuditory() ) );
+                denominatorComments.setText( new StringBuilder( denominatorClass.getComments() ) );
+
+                switch ( denominatorClass.getClassType() )
+                {
+                    case UniversityClass.LECTURE:
+                        RadioButton denominatorRadioLecture = (RadioButton) findViewById( R.id.lecture_denominator );
+                        denominatorRadioLecture.setChecked( true );
+                        break;
+                    case UniversityClass.LABS:
+                        RadioButton denominatorRadioLabs = (RadioButton) findViewById( R.id.labs_denominator );
+                        denominatorRadioLabs.setChecked( true );
+                        break;
+                    case UniversityClass.PRACTICE:
+                        RadioButton denominatorRadioPractice = (RadioButton) findViewById( R.id.practice_denominator );
+                        denominatorRadioPractice.setChecked( true );
+                        break;
+                }
+            }
+
+        }
+    }
+    
     @Override
     public boolean onCreateOptionsMenu( Menu menu )
     {
@@ -61,12 +213,22 @@ public class AddUniversityClassActivity extends Activity
 
                 if ( Pair != null )
                 {
-                    intent.putParcelableArrayListExtra( UniversityClass.class.getCanonicalName(), Pair);
-                    setResult( getNumberOfDay( day ), intent );
+                    if ( editMode )
+                    {
+                        intent.putExtra( String.class.getCanonicalName(), day );
+                        intent.putParcelableArrayListExtra( UniversityClass.class.getCanonicalName(), Pair );
+                        setResult( EDIT, intent );
+                    }
+                    else
+                    {
+                        intent.putExtra( String.class.getCanonicalName(), day );
+                        intent.putParcelableArrayListExtra( UniversityClass.class.getCanonicalName(), Pair );
+                        setResult( ADD, intent );
+                    }
                 }
                 else
                 {
-                    setResult( -1, intent );
+                    setResult( FAILED, intent );
                 }
 
                 finish();
@@ -78,7 +240,7 @@ public class AddUniversityClassActivity extends Activity
     @Override
     public void onBackPressed()
     {
-        setResult( -1, intent );
+        setResult( FAILED, intent );
         finish();
     }
 
@@ -100,13 +262,19 @@ public class AddUniversityClassActivity extends Activity
     private ArrayList<UniversityClass> onClickDone()
     {
 
-        ArrayList<UniversityClass> newPair = new ArrayList<UniversityClass>( 2 );
+        if ( editPair == null )
+        {
+            editPair = new ArrayList<UniversityClass>( 2 );
+        }
+        else
+        {
+            editPair.clear();
+        }
 
         UniversityClass numeratorClass = new UniversityClass();
         UniversityClass denominatorClass = new UniversityClass();
         int radioId;
 
-        RadioGroup radioClassNumbers = (RadioGroup) findViewById( R.id.radio_class_numbers );
         radioId = radioClassNumbers.getCheckedRadioButtonId();
         switch ( radioId )
         {
@@ -137,9 +305,6 @@ public class AddUniversityClassActivity extends Activity
         }
 
         // fill Numerator class
-        EditText numeratorSubject = (EditText) findViewById( R.id.subject_edit_numerator );
-        EditText numeratorTeacher = (EditText) findViewById( R.id.teacher_edit_numerator );
-        EditText numeratorAuditory = (EditText) findViewById( R.id.auditory_edit_numerator );
 
         if ( numeratorSubject.isEnabled() && numeratorTeacher.isEnabled() && numeratorAuditory.isEnabled() )
         {
@@ -149,7 +314,6 @@ public class AddUniversityClassActivity extends Activity
 
             if ( numeratorClass.isClassFilled() )
             {
-                RadioGroup numeratorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_numerator );
                 radioId = numeratorRadioClassType.getCheckedRadioButtonId();
                 switch ( radioId )
                 {
@@ -164,7 +328,6 @@ public class AddUniversityClassActivity extends Activity
                         break;
                 }
 
-                EditText numeratorComments = (EditText) findViewById( R.id.comments_numerator );
                 numeratorClass.setComments( numeratorComments.getText().toString() );
 
                 numeratorClass.setWeekType( UniversityClass.NUMERATOR );
@@ -179,9 +342,6 @@ public class AddUniversityClassActivity extends Activity
             numeratorClass = null;
         }
         // fill denominator class
-        EditText denominatorSubject = (EditText) findViewById( R.id.subject_edit_denominator );
-        EditText denominatorTeacher = (EditText) findViewById( R.id.teacher_edit_denominator );
-        EditText denominatorAuditory = (EditText) findViewById( R.id.auditory_edit_denominator );
 
         if ( denominatorSubject.isEnabled() && denominatorTeacher.isEnabled() && denominatorAuditory.isEnabled() )
         {
@@ -192,7 +352,6 @@ public class AddUniversityClassActivity extends Activity
 
             if ( denominatorClass.isClassFilled() )
             {
-                RadioGroup denominatorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_denominator );
                 radioId = denominatorRadioClassType.getCheckedRadioButtonId();
                 switch ( radioId )
                 {
@@ -207,7 +366,6 @@ public class AddUniversityClassActivity extends Activity
                         break;
                 }
 
-                EditText denominatorComments = (EditText) findViewById( R.id.comments_denominator );
                 denominatorClass.setComments( denominatorComments.getText().toString() );
 
                 denominatorClass.setWeekType( UniversityClass.DENOMINATOR );
@@ -224,16 +382,16 @@ public class AddUniversityClassActivity extends Activity
 
         if ( numeratorClass == null && denominatorClass == null )
         {
-            newPair = null;
+            editPair = null;
         }
         else
         {
             if ( numeratorClass != null )
-                newPair.add( numeratorClass );
+                editPair.add( numeratorClass );
             if ( denominatorClass != null )
-                newPair.add( denominatorClass );
+                editPair.add( denominatorClass );
         }
-        return newPair;
+        return editPair;
     }
 
     private OnClickListener OnClickRemoveNumeratorButton = new OnClickListener()
@@ -243,23 +401,18 @@ public class AddUniversityClassActivity extends Activity
 		@Override
         public void onClick( View v )
         {
-            EditText numeratorSubject = (EditText) findViewById( R.id.subject_edit_numerator );
             numeratorSubject.setText( new StringBuilder("") );
             numeratorSubject.setEnabled( false );
 
-            EditText numeratorTeacher = (EditText) findViewById( R.id.teacher_edit_numerator );
             numeratorTeacher.setText( new StringBuilder("") );
             numeratorTeacher.setEnabled( false );
 
-            EditText numeratorAuditory = (EditText) findViewById( R.id.auditory_edit_numerator );
             numeratorAuditory.setText( new StringBuilder("") );
             numeratorAuditory.setEnabled( false );
             
 
-            RadioGroup numeratorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_numerator );
             numeratorRadioClassType.setEnabled( false );
 
-            EditText numeratorComments = (EditText) findViewById( R.id.comments_numerator );
             numeratorComments.setText( new StringBuilder("") );
             numeratorComments.setEnabled( false );
         }
@@ -273,23 +426,18 @@ public class AddUniversityClassActivity extends Activity
         @Override
         public void onClick( View v )
         {
-            EditText denominatorSubject = (EditText) findViewById( R.id.subject_edit_denominator );
             denominatorSubject.setText( new StringBuilder("") );
             denominatorSubject.setEnabled( false );
 
-            EditText denominatorTeacher = (EditText) findViewById( R.id.teacher_edit_denominator );
             denominatorTeacher.setText( new StringBuilder("") );
             denominatorTeacher.setEnabled( false );
 
-            EditText denominatorAuditory = (EditText) findViewById( R.id.auditory_edit_denominator );
             denominatorAuditory.setText( new StringBuilder("") );
             denominatorAuditory.setEnabled( false );
             
 
-            RadioGroup denominatorRadioClassType = (RadioGroup) findViewById( R.id.radio_class_type_denominator );
             denominatorRadioClassType.setEnabled( false );
 
-            EditText denominatorComments = (EditText) findViewById( R.id.comments_denominator );
             denominatorComments.setText( new StringBuilder("") );
             denominatorComments.setEnabled( false );
         }
